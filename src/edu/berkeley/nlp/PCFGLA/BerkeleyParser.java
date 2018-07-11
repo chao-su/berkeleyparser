@@ -106,6 +106,9 @@ public class BerkeleyParser {
 
 		@Option(name = "-nGrammars", usage = "Use a product model based on that many grammars")
 		public int nGrammars = 1;
+
+		@Option(name = "-escape", usage = "Escape parantheses and backslashes")
+		public boolean escape;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -369,7 +372,11 @@ public class BerkeleyParser {
 			else if (addDelimiter)
 				outputData.write(delimiter);
 			if (!parsedTree.getChildren().isEmpty()) {
-				String treeString = parsedTree.getChildren().get(0).toString();
+				String treeString = "";
+				if (opts.escape)
+					treeString = parsedTree.getChildren().get(0).toEscapedString();
+				else
+					treeString = parsedTree.getChildren().get(0).toString();
 				if (parsedTree.getChildren().size() != 1) {
 					System.err.println("ROOT has more than one child!");
 					parsedTree.setLabel("");
